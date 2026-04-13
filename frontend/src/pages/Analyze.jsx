@@ -52,27 +52,30 @@ export default function Analyze() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="relative max-w-4xl mx-auto px-4 py-8">
+      <div className="glow-blob glow-blob-1" />
+      <div className="glow-blob glow-blob-2" />
+
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold text-white mb-2">Text Analysis</h1>
         <p className="text-gray-400">Enter any text to see how the NLP pipeline processes it</p>
       </div>
 
       {/* Input */}
-      <div className="bg-surface-light rounded-2xl border border-surface-lighter p-6 mb-6">
+      <div className="glass rounded-3xl p-8 mb-8">
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Enter text to analyze..."
           rows={3}
-          className="w-full bg-surface border border-surface-lighter rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:border-primary outline-none resize-none mb-4"
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:border-primary outline-none resize-none mb-4"
         />
 
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-4">
           <button
             onClick={() => analyze()}
             disabled={!text.trim() || loading}
-            className="px-6 py-2 bg-gradient-to-r from-primary to-primary-dark text-white rounded-lg font-medium hover:shadow-lg hover:shadow-primary/25 transition-all disabled:opacity-50"
+            className="btn-glow px-6 py-2 bg-gradient-to-r from-primary to-primary-dark text-white rounded-xl font-medium hover:shadow-lg hover:shadow-primary/25 transition-all disabled:opacity-50"
           >
             {loading ? 'Analyzing...' : 'Analyze'}
           </button>
@@ -84,7 +87,7 @@ export default function Analyze() {
                 key={i}
                 onClick={() => analyze(s)}
                 disabled={loading}
-                className="px-3 py-1.5 rounded-full text-xs bg-surface border border-surface-lighter text-gray-400 hover:text-white hover:border-primary/50 transition-all disabled:opacity-50"
+                className="glass px-3 py-1.5 rounded-full text-xs text-gray-400 hover:text-white hover:border-primary/50 transition-all disabled:opacity-50"
               >
                 {s.length > 40 ? s.slice(0, 40) + '...' : s}
               </button>
@@ -94,17 +97,17 @@ export default function Analyze() {
       </div>
 
       {error && (
-        <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 mb-6 text-red-400 text-sm">
+        <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 mb-8 text-red-400 text-sm">
           {error}
         </div>
       )}
 
       {/* Results */}
       {result && (
-        <div className="space-y-6">
+        <div className="space-y-8">
           {/* Intent & Confidence */}
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-surface-light rounded-2xl border border-surface-lighter p-6">
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="glass rounded-3xl p-8">
               <h3 className="text-sm font-medium text-gray-400 mb-4">Predicted Intent</h3>
               <div className="text-3xl font-bold text-white mb-2 capitalize">{result.intent}</div>
               <div className={`text-lg font-mono ${getConfidenceColor(result.confidence)}`}>
@@ -112,7 +115,7 @@ export default function Analyze() {
               </div>
             </div>
 
-            <div className="bg-surface-light rounded-2xl border border-surface-lighter p-6">
+            <div className="glass rounded-3xl p-8">
               <h3 className="text-sm font-medium text-gray-400 mb-4">Response</h3>
               <p className="text-gray-200 text-sm leading-relaxed">{result.response}</p>
             </div>
@@ -120,13 +123,13 @@ export default function Analyze() {
 
           {/* Top Intents */}
           {result.top_intents && (
-            <div className="bg-surface-light rounded-2xl border border-surface-lighter p-6">
+            <div className="glass rounded-3xl p-8">
               <h3 className="text-sm font-medium text-gray-400 mb-4">Top Intent Predictions</h3>
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {result.top_intents.map((ti, i) => (
                   <div key={i} className="flex items-center gap-4">
                     <div className="w-28 text-sm text-gray-300 capitalize font-medium">{ti.intent}</div>
-                    <div className="flex-1 bg-surface rounded-full h-3">
+                    <div className="flex-1 bg-white/5 rounded-full h-3">
                       <div
                         className={`${getConfidenceBarColor(ti.confidence)} rounded-full h-3 transition-all`}
                         style={{ width: `${Math.max(ti.confidence * 100, 2)}%` }}
@@ -142,12 +145,12 @@ export default function Analyze() {
           )}
 
           {/* Entities */}
-          <div className="bg-surface-light rounded-2xl border border-surface-lighter p-6">
+          <div className="glass rounded-3xl p-8">
             <h3 className="text-sm font-medium text-gray-400 mb-4">Extracted Entities</h3>
             {result.entities && result.entities.length > 0 ? (
               <div className="flex flex-wrap gap-2">
                 {result.entities.map((entity, i) => (
-                  <div key={i} className="px-3 py-2 rounded-xl bg-surface border border-surface-lighter">
+                  <div key={i} className="px-3 py-2 rounded-xl bg-white/5 border border-white/10">
                     <span className="text-white font-medium text-sm">{entity.value}</span>
                     <span className="text-gray-500 text-xs ml-2">{entity.type.replace('_', ' ')}</span>
                   </div>
@@ -159,31 +162,31 @@ export default function Analyze() {
           </div>
 
           {/* Preprocessing */}
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-surface-light rounded-2xl border border-surface-lighter p-6">
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="glass rounded-3xl p-8">
               <h3 className="text-sm font-medium text-gray-400 mb-4">Preprocessing</h3>
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <div>
                   <div className="text-xs text-gray-500 mb-1">Original</div>
-                  <div className="px-3 py-2 bg-surface rounded-lg text-sm text-gray-300 font-mono">{text}</div>
+                  <div className="px-3 py-2 bg-white/5 rounded-lg text-sm text-gray-300 font-mono">{text}</div>
                 </div>
                 <div className="flex justify-center text-gray-500">↓</div>
                 <div>
                   <div className="text-xs text-gray-500 mb-1">After Preprocessing</div>
-                  <div className="px-3 py-2 bg-surface rounded-lg text-sm text-primary-light font-mono">{result.preprocessed}</div>
+                  <div className="px-3 py-2 bg-white/5 rounded-lg text-sm text-primary-light font-mono">{result.preprocessed}</div>
                 </div>
               </div>
             </div>
 
-            <div className="bg-surface-light rounded-2xl border border-surface-lighter p-6">
+            <div className="glass rounded-3xl p-8">
               <h3 className="text-sm font-medium text-gray-400 mb-4">Metadata</h3>
               {result.metadata && (
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="p-3 bg-surface rounded-xl text-center">
+                  <div className="p-4 bg-white/5 rounded-xl text-center">
                     <div className="text-2xl font-bold text-white">{result.metadata.word_count}</div>
                     <div className="text-xs text-gray-500">Words</div>
                   </div>
-                  <div className="p-3 bg-surface rounded-xl text-center">
+                  <div className="p-4 bg-white/5 rounded-xl text-center">
                     <div className="text-2xl font-bold text-white">{result.metadata.char_count}</div>
                     <div className="text-xs text-gray-500">Characters</div>
                   </div>

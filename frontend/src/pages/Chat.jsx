@@ -15,7 +15,7 @@ export default function Chat() {
   const [messages, setMessages] = useState([
     {
       role: 'bot',
-      text: "Hi! I'm LinguaBot 🤖 Ask me about programming, AI, data structures, or just have a chat!",
+      text: "Hi! I'm LinguaBot. Ask me about programming, AI, data structures, or just have a chat!",
       analysis: null,
     },
   ])
@@ -95,7 +95,10 @@ export default function Chat() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-6 flex flex-col h-[calc(100vh-64px)]">
+    <div className="relative max-w-4xl mx-auto px-4 py-8 flex flex-col h-[calc(100vh-64px)]">
+      <div className="glow-blob glow-blob-1" />
+      <div className="glow-blob glow-blob-2" />
+
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
@@ -108,15 +111,15 @@ export default function Chat() {
         <div className="flex gap-2">
           <button
             onClick={() => setShowAnalysis(!showAnalysis)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-              showAnalysis ? 'bg-primary/20 text-primary-light' : 'bg-surface-lighter text-gray-400'
+            className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
+              showAnalysis ? 'bg-primary/20 text-primary-light' : 'glass text-gray-400'
             }`}
           >
             {showAnalysis ? 'Hide' : 'Show'} Analysis
           </button>
           <button
             onClick={clearChat}
-            className="px-3 py-1.5 rounded-lg text-xs font-medium bg-surface-lighter text-gray-400 hover:text-white transition-all"
+            className="glass px-3 py-1.5 rounded-xl text-xs font-medium text-gray-400 hover:text-white transition-all"
           >
             Clear
           </button>
@@ -129,17 +132,17 @@ export default function Chat() {
           <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in-up`}>
             <div className={`max-w-[80%] ${msg.role === 'user' ? 'order-1' : ''}`}>
               <div
-                className={`px-4 py-3 rounded-2xl text-sm leading-relaxed ${
+                className={`px-4 py-3 rounded-3xl text-sm leading-relaxed ${
                   msg.role === 'user'
                     ? 'bg-user-bubble text-white rounded-br-sm'
-                    : 'bg-bot-bubble text-gray-200 rounded-bl-sm border border-surface-lighter'
+                    : 'glass text-gray-200 rounded-bl-sm'
                 }`}
               >
                 {msg.text}
               </div>
 
               {showAnalysis && msg.analysis && (
-                <div className="mt-2 p-3 bg-surface-light/50 rounded-xl border border-surface-lighter text-xs space-y-2">
+                <div className="mt-2 glass p-3 rounded-xl text-xs space-y-2">
                   <div className="flex flex-wrap gap-2">
                     <span className="px-2 py-0.5 rounded bg-primary/20 text-primary-light">
                       Intent: {msg.analysis.intent}
@@ -154,7 +157,7 @@ export default function Chat() {
                       <div className="text-gray-500">Top Predictions:</div>
                       {msg.analysis.top_intents.map((ti, j) => (
                         <div key={j} className="flex items-center gap-2">
-                          <div className="flex-1 bg-surface-lighter rounded-full h-1.5">
+                          <div className="flex-1 bg-white/5 rounded-full h-1.5">
                             <div
                               className="bg-primary-light rounded-full h-1.5"
                               style={{ width: `${ti.confidence * 100}%` }}
@@ -191,7 +194,7 @@ export default function Chat() {
 
         {isTyping && (
           <div className="flex justify-start animate-fade-in-up">
-            <div className="bg-bot-bubble border border-surface-lighter px-4 py-3 rounded-2xl rounded-bl-sm">
+            <div className="glass px-4 py-3 rounded-3xl rounded-bl-sm">
               <div className="flex gap-1">
                 <div className="w-2 h-2 bg-gray-400 rounded-full typing-dot" />
                 <div className="w-2 h-2 bg-gray-400 rounded-full typing-dot" />
@@ -205,13 +208,13 @@ export default function Chat() {
       </div>
 
       {/* Quick Replies */}
-      <div className="flex flex-wrap gap-2 mb-3">
+      <div className="flex flex-wrap gap-2 mb-4">
         {quickReplies.map(q => (
           <button
             key={q}
             onClick={() => sendMessage(q)}
             disabled={isTyping}
-            className="px-3 py-1.5 rounded-full text-xs bg-surface-light border border-surface-lighter text-gray-400 hover:text-white hover:border-primary/50 transition-all disabled:opacity-50"
+            className="glass px-3 py-1.5 rounded-full text-xs text-gray-400 hover:text-white hover:border-primary/50 transition-all disabled:opacity-50"
           >
             {q}
           </button>
@@ -228,12 +231,12 @@ export default function Chat() {
           onKeyDown={handleKeyDown}
           placeholder="Type a message..."
           disabled={isTyping}
-          className="flex-1 bg-surface-light border border-surface-lighter rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:border-primary outline-none transition-colors disabled:opacity-50"
+          className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:border-primary outline-none transition-colors disabled:opacity-50"
         />
         <button
           onClick={() => sendMessage()}
           disabled={!input.trim() || isTyping}
-          className="px-6 py-3 bg-gradient-to-r from-primary to-primary-dark text-white rounded-xl font-medium hover:shadow-lg hover:shadow-primary/25 transition-all disabled:opacity-50"
+          className="btn-glow px-6 py-3 bg-gradient-to-r from-primary to-primary-dark text-white rounded-xl font-medium hover:shadow-lg hover:shadow-primary/25 transition-all disabled:opacity-50"
         >
           Send
         </button>

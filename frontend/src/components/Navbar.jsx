@@ -12,11 +12,20 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
-    <nav className="bg-surface-light/80 backdrop-blur-md border-b border-surface-lighter sticky top-0 z-50">
+    <nav className="glass-strong sticky top-0 z-50">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-2 text-xl font-bold text-white no-underline">
-            <span className="text-2xl">🤖</span>
+            <svg className="w-7 h-7 text-primary-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+              <circle cx="12" cy="8" r="5" strokeLinecap="round" strokeLinejoin="round" />
+              <line x1="12" y1="3" x2="12" y2="1" strokeLinecap="round" />
+              <line x1="9" y1="3.5" x2="8" y2="1.5" strokeLinecap="round" />
+              <line x1="15" y1="3.5" x2="16" y2="1.5" strokeLinecap="round" />
+              <circle cx="10" cy="7.5" r="0.75" fill="currentColor" stroke="none" />
+              <circle cx="14" cy="7.5" r="0.75" fill="currentColor" stroke="none" />
+              <path d="M10 10.5c0 0 1 1 2 1s2-1 2-1" strokeLinecap="round" />
+              <path d="M7 13v5a2 2 0 002 2h6a2 2 0 002-2v-5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
             <span className="bg-gradient-to-r from-primary-light to-accent bg-clip-text text-transparent">
               LinguaBot
             </span>
