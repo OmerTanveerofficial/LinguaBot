@@ -2,6 +2,8 @@
 
 An intelligent chatbot built with Natural Language Processing, featuring intent classification, entity extraction, and real-time text analysis. Powered by TF-IDF vectorization and Naive Bayes classification.
 
+**Live Demo:** [https://linguabot-gules.vercel.app](https://linguabot-gules.vercel.app)
+
 ## Screenshots
 
 ### Landing Page
