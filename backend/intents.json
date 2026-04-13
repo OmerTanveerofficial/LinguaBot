@@ -1,0 +1,210 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": [
+        "hi", "hello", "hey", "good morning", "good afternoon", "good evening",
+        "what's up", "howdy", "greetings", "hi there", "hello there", "hey there",
+        "sup", "yo", "hola", "bonjour", "namaste"
+      ],
+      "responses": [
+        "Hello! How can I help you today?",
+        "Hi there! What can I do for you?",
+        "Hey! Nice to see you. How can I assist?",
+        "Greetings! What would you like to know?"
+      ]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": [
+        "bye", "goodbye", "see you", "see you later", "take care", "farewell",
+        "good night", "cya", "catch you later", "I'm leaving", "gotta go"
+      ],
+      "responses": [
+        "Goodbye! Have a great day!",
+        "See you later! Take care!",
+        "Bye! Feel free to come back anytime!",
+        "Farewell! It was nice chatting with you!"
+      ]
+    },
+    {
+      "tag": "thanks",
+      "patterns": [
+        "thanks", "thank you", "that's helpful", "thanks a lot", "appreciate it",
+        "thank you so much", "much appreciated", "thx", "ty"
+      ],
+      "responses": [
+        "You're welcome!",
+        "Happy to help!",
+        "Glad I could assist!",
+        "Anytime! Feel free to ask more questions."
+      ]
+    },
+    {
+      "tag": "about",
+      "patterns": [
+        "who are you", "what are you", "what's your name", "tell me about yourself",
+        "what can you do", "your purpose", "what do you do", "introduce yourself",
+        "who made you", "what is linguabot"
+      ],
+      "responses": [
+        "I'm LinguaBot, an NLP-powered chatbot built with transformer models. I can answer questions, have conversations, and help with various topics!",
+        "I'm LinguaBot! I use natural language processing to understand and respond to your messages. Ask me anything!",
+        "I'm an AI chatbot powered by NLP and transformer architecture. I'm here to chat and help you out!"
+      ]
+    },
+    {
+      "tag": "help",
+      "patterns": [
+        "help", "help me", "can you help", "I need help", "assist me",
+        "what can you help with", "how can you help", "I'm stuck", "support"
+      ],
+      "responses": [
+        "I can help with general questions, programming topics, science, math, and more. Just ask!",
+        "Sure! I can assist with various topics. Try asking me about programming, science, math, or just have a conversation!",
+        "I'm here to help! You can ask me about technology, science, programming, or anything else."
+      ]
+    },
+    {
+      "tag": "programming",
+      "patterns": [
+        "what is programming", "tell me about coding", "what is python",
+        "what is javascript", "explain programming", "what programming languages exist",
+        "how to learn programming", "best programming language", "what is software development",
+        "difference between frontend and backend", "what is an API"
+      ],
+      "responses": [
+        "Programming is the process of creating instructions for computers using programming languages like Python, JavaScript, Java, and C++. It's used to build websites, apps, games, AI systems, and much more!",
+        "Programming involves writing code to solve problems and build software. Popular languages include Python (great for beginners and AI), JavaScript (web development), Java (enterprise apps), and many more!",
+        "Coding is all about telling computers what to do! Start with Python for its simplicity, or JavaScript for web development. The key is practice and building projects."
+      ]
+    },
+    {
+      "tag": "ai_ml",
+      "patterns": [
+        "what is artificial intelligence", "explain machine learning", "what is deep learning",
+        "how does AI work", "what is neural network", "tell me about NLP",
+        "what is natural language processing", "how do chatbots work",
+        "difference between AI and ML", "what is computer vision", "what is reinforcement learning"
+      ],
+      "responses": [
+        "AI (Artificial Intelligence) is the simulation of human intelligence by machines. Machine Learning is a subset where systems learn from data. Deep Learning uses neural networks with many layers to learn complex patterns!",
+        "Machine Learning allows computers to learn from data without being explicitly programmed. It includes supervised learning (labeled data), unsupervised learning (finding patterns), and reinforcement learning (learning from rewards).",
+        "NLP (Natural Language Processing) is the field of AI that helps computers understand human language. It powers chatbots like me, translation services, sentiment analysis, and voice assistants!"
+      ]
+    },
+    {
+      "tag": "data_structures",
+      "patterns": [
+        "what are data structures", "explain algorithms", "what is a linked list",
+        "what is a binary tree", "what is big O notation", "explain sorting algorithms",
+        "what is a hash table", "what is a stack", "what is a queue",
+        "difference between array and linked list", "what is a graph data structure"
+      ],
+      "responses": [
+        "Data structures are ways to organize and store data efficiently. Common ones include arrays, linked lists, stacks, queues, trees, graphs, and hash tables. Each has different time complexities for operations like search, insert, and delete.",
+        "Algorithms are step-by-step procedures for solving problems. Big O notation measures their efficiency. For example, binary search is O(log n), while bubble sort is O(n²). Understanding these is crucial for software engineering!",
+        "Key data structures: Arrays (O(1) access), Linked Lists (O(1) insert), Hash Tables (O(1) average lookup), Binary Trees (O(log n) search), Graphs (for network problems). Each is suited for different use cases!"
+      ]
+    },
+    {
+      "tag": "web_development",
+      "patterns": [
+        "what is web development", "explain HTML CSS", "what is React",
+        "what is Node.js", "frontend vs backend", "what is a REST API",
+        "how to build a website", "what is full stack", "what is responsive design",
+        "what is a database", "explain SQL vs NoSQL"
+      ],
+      "responses": [
+        "Web development involves building websites and web apps. Frontend (HTML, CSS, JavaScript, React) handles what users see. Backend (Node.js, Python, Java) handles server logic. Full-stack developers do both!",
+        "Modern web development uses frameworks like React, Vue, or Angular for frontend, and Node.js, Django, or Spring for backend. REST APIs connect them, and databases (SQL or NoSQL) store the data.",
+        "To build a website: learn HTML (structure), CSS (styling), JavaScript (interactivity). Then move to frameworks like React for frontend and Node.js/Express for backend. Use databases like MongoDB or PostgreSQL for data storage."
+      ]
+    },
+    {
+      "tag": "math",
+      "patterns": [
+        "explain calculus", "what is linear algebra", "what is statistics",
+        "what is probability", "explain matrices", "what is discrete math",
+        "importance of math in CS", "what is a derivative", "what is an integral"
+      ],
+      "responses": [
+        "Math is fundamental to computer science! Linear algebra powers machine learning, calculus helps with optimization, probability/statistics are used in data science, and discrete math is the foundation of algorithms and logic.",
+        "Key math for CS: Linear Algebra (vectors, matrices for ML), Calculus (optimization, gradients), Probability (predictions, Bayesian methods), Discrete Math (graphs, logic, combinatorics).",
+        "Mathematics provides the theoretical foundation for computing. Derivatives measure rates of change (used in gradient descent for ML), matrices represent data transformations, and probability helps make predictions under uncertainty."
+      ]
+    },
+    {
+      "tag": "career",
+      "patterns": [
+        "how to get a job in tech", "software engineer career", "data scientist career",
+        "how to prepare for interviews", "what skills do I need", "tech career advice",
+        "how to build a portfolio", "resume tips for developers", "freelancing in tech"
+      ],
+      "responses": [
+        "For a tech career: build projects, contribute to open source, practice coding challenges (LeetCode, HackerRank), network on LinkedIn, and tailor your resume with quantifiable achievements. A strong GitHub portfolio is key!",
+        "Key steps: 1) Learn fundamentals (DSA, OOP), 2) Build real projects, 3) Create a strong GitHub profile, 4) Practice system design, 5) Network and apply. For data science, add Python, SQL, and ML skills.",
+        "Tips: Focus on 1-2 technologies deeply rather than many superficially. Build portfolio projects that solve real problems. Write clean code with documentation. Contribute to open source. Practice behavioral and technical interviews."
+      ]
+    },
+    {
+      "tag": "fun_fact",
+      "patterns": [
+        "tell me a fun fact", "interesting fact", "did you know", "fun fact",
+        "tell me something interesting", "surprise me", "random fact"
+      ],
+      "responses": [
+        "Fun fact: The first computer bug was an actual bug! In 1947, Grace Hopper found a moth stuck in a relay of the Harvard Mark II computer.",
+        "Did you know? The first 1GB hard drive, made by IBM in 1980, weighed about 550 pounds and cost $40,000!",
+        "Interesting fact: Python is named after Monty Python's Flying Circus, not the snake! Guido van Rossum was reading scripts from the show when he created it.",
+        "Fun fact: The @ symbol in email was chosen by Ray Tomlinson in 1971 because it was rarely used in computing and could mean 'at'."
+      ]
+    },
+    {
+      "tag": "joke",
+      "patterns": [
+        "tell me a joke", "make me laugh", "joke", "something funny",
+        "say something funny", "humor me", "got any jokes"
+      ],
+      "responses": [
+        "Why do programmers prefer dark mode? Because light attracts bugs!",
+        "A SQL query walks into a bar, walks up to two tables and asks, 'Can I join you?'",
+        "Why do Java developers wear glasses? Because they can't C#!",
+        "There are only 10 types of people in the world: those who understand binary and those who don't.",
+        "What's a programmer's favorite hangout place? Foo Bar!"
+      ]
+    },
+    {
+      "tag": "weather",
+      "patterns": [
+        "what's the weather", "how's the weather", "is it raining", "temperature today",
+        "weather forecast", "will it rain"
+      ],
+      "responses": [
+        "I don't have access to real-time weather data, but you can check weather.com or your phone's weather app for accurate forecasts!",
+        "I can't check live weather, but I recommend using a weather API like OpenWeatherMap if you want to build a weather app!"
+      ]
+    },
+    {
+      "tag": "time",
+      "patterns": [
+        "what time is it", "current time", "what's the date", "today's date",
+        "what day is it"
+      ],
+      "responses": [
+        "I don't have access to real-time clock data, but your device should show the current time and date!",
+        "Check your device for the current time. Fun fact: computers track time using Unix timestamps - seconds since January 1, 1970!"
+      ]
+    },
+    {
+      "tag": "fallback",
+      "patterns": [],
+      "responses": [
+        "I'm not sure I understand. Could you rephrase that?",
+        "Interesting! Could you tell me more or ask in a different way?",
+        "I don't have enough information about that. Can you try asking differently?",
+        "Hmm, I'm not sure about that. Try asking me about programming, AI, data structures, or other tech topics!"
+      ]
+    }
+  ]
+}
