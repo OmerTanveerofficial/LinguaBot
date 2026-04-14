@@ -4,24 +4,66 @@ const API_BASE = '/api'
 
 const quickReplies = [
   'What is AI?',
-  'Tell me a joke',
-  'What can you do?',
   'Explain machine learning',
-  'Fun fact',
   'What is React?',
+  'Fun fact',
+  'What can you do?',
 ]
+
+function timestamp() {
+  const d = new Date()
+  return `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`
+}
+
+function TypingDots() {
+  return (
+    <div className="flex items-center gap-1">
+      <span className="dot w-1 h-1 rounded-full bg-ink-soft" />
+      <span className="dot w-1 h-1 rounded-full bg-ink-soft" />
+      <span className="dot w-1 h-1 rounded-full bg-ink-soft" />
+    </div>
+  )
+}
+
+function MessageAnalysis({ analysis }) {
+  if (!analysis) return null
+  return (
+    <div className="footnote mt-3 pl-4 border-l-2 border-accent-soft max-w-2xl">
+      Intent{' '}
+      <span className="mono not-italic text-ink text-[12px]">{analysis.intent}</span>
+      {' · '}
+      <span className="mono not-italic text-ink text-[12px]">
+        {(analysis.confidence * 100).toFixed(1)}%
+      </span>
+      {analysis.entities?.length > 0 && (
+        <>
+          {' · entities '}
+          <span className="mono not-italic text-ink text-[12px]">
+            {analysis.entities.map(e => e.value).join(', ')}
+          </span>
+        </>
+      )}
+      {analysis.preprocessed && (
+        <div className="mt-1 mono not-italic text-ink-faded text-[11px]">
+          ↳ preprocessed: {analysis.preprocessed}
+        </div>
+      )}
+    </div>
+  )
+}
 
 export default function Chat() {
   const [messages, setMessages] = useState([
     {
       role: 'bot',
-      text: "Hi! I'm LinguaBot. Ask me about programming, AI, data structures, or just have a chat!",
+      text: "Hi — I'm LinguaBot. Ask me about programming, machine learning, data structures, or anything on your mind.",
       analysis: null,
+      time: timestamp(),
     },
   ])
   const [input, setInput] = useState('')
   const [isTyping, setIsTyping] = useState(false)
-  const [showAnalysis, setShowAnalysis] = useState(false)
+  const [showAnalysis, setShowAnalysis] = useState(true)
   const [backendOnline, setBackendOnline] = useState(null)
   const messagesEndRef = useRef(null)
   const inputRef = useRef(null)
@@ -41,7 +83,7 @@ export default function Chat() {
     const msg = text || input.trim()
     if (!msg) return
 
-    setMessages(prev => [...prev, { role: 'user', text: msg, analysis: null }])
+    setMessages(prev => [...prev, { role: 'user', text: msg, analysis: null, time: timestamp() }])
     setInput('')
     setIsTyping(true)
 
@@ -52,22 +94,18 @@ export default function Chat() {
         body: JSON.stringify({ message: msg, session_id: 'web-client' }),
       })
       const data = await res.json()
-
       setMessages(prev => [
         ...prev,
-        {
-          role: 'bot',
-          text: data.response,
-          analysis: data.analysis,
-        },
+        { role: 'bot', text: data.response, analysis: data.analysis, time: timestamp() },
       ])
     } catch {
       setMessages(prev => [
         ...prev,
         {
           role: 'bot',
-          text: "Sorry, I couldn't connect to the server. Make sure the backend is running on port 5200.",
+          text: "I couldn't reach the server — make sure the backend is running on port 5200.",
           analysis: null,
+          time: timestamp(),
         },
       ])
     }
@@ -84,162 +122,110 @@ export default function Chat() {
   }
 
   const clearChat = () => {
-    setMessages([
-      {
-        role: 'bot',
-        text: "Chat cleared! How can I help you?",
-        analysis: null,
-      },
-    ])
+    setMessages([{
+      role: 'bot',
+      text: 'Chat cleared. How can I help you?',
+      analysis: null,
+      time: timestamp(),
+    }])
     fetch(`${API_BASE}/history/web-client`, { method: 'DELETE' }).catch(() => {})
   }
 
-  return (
-    <div className="relative max-w-4xl mx-auto px-4 py-8 flex flex-col h-[calc(100vh-64px)]">
-      <div className="glow-blob glow-blob-1" />
-      <div className="glow-blob glow-blob-2" />
+  const statusLabel =
+    backendOnline === null ? 'checking' :
+    backendOnline ? 'online' : 'offline'
 
+  return (
+    <div className="max-w-5xl mx-auto px-6 lg:px-10 flex flex-col h-[calc(100vh-56px)]">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <h1 className="text-xl font-bold text-white">Chat</h1>
-          <div className={`w-2 h-2 rounded-full ${backendOnline === true ? 'bg-green-500' : backendOnline === false ? 'bg-red-500' : 'bg-yellow-500'}`} />
-          <span className="text-xs text-gray-500">
-            {backendOnline === true ? 'Online' : backendOnline === false ? 'Offline' : 'Checking...'}
-          </span>
+      <header className="pt-8 pb-6 border-b border-rule flex items-end justify-between flex-wrap gap-4">
+        <div>
+          <p className="label mb-2">Dialogue</p>
+          <h1 className="display text-3xl text-ink">Conversation</h1>
         </div>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 dateline">
+            <span className={`w-1 h-1 rounded-full ${backendOnline ? 'bg-ok' : backendOnline === false ? 'bg-danger' : 'bg-ink-faded'}`} />
+            <span>{statusLabel}</span>
+          </div>
           <button
             onClick={() => setShowAnalysis(!showAnalysis)}
-            className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
-              showAnalysis ? 'bg-primary/20 text-primary-light' : 'glass text-gray-400'
-            }`}
+            className="btn-ghost"
           >
-            {showAnalysis ? 'Hide' : 'Show'} Analysis
+            {showAnalysis ? 'Hide' : 'Show'} analysis
           </button>
-          <button
-            onClick={clearChat}
-            className="glass px-3 py-1.5 rounded-xl text-xs font-medium text-gray-400 hover:text-white transition-all"
-          >
+          <button onClick={clearChat} className="btn-ghost">
             Clear
           </button>
         </div>
-      </div>
+      </header>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto space-y-4 mb-4 pr-2">
+      <div className="flex-1 overflow-y-auto py-8 space-y-8">
         {messages.map((msg, i) => (
-          <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in-up`}>
-            <div className={`max-w-[80%] ${msg.role === 'user' ? 'order-1' : ''}`}>
-              <div
-                className={`px-4 py-3 rounded-3xl text-sm leading-relaxed ${
-                  msg.role === 'user'
-                    ? 'bg-user-bubble text-white rounded-br-sm'
-                    : 'glass text-gray-200 rounded-bl-sm'
-                }`}
-              >
-                {msg.text}
-              </div>
-
-              {showAnalysis && msg.analysis && (
-                <div className="mt-2 glass p-3 rounded-xl text-xs space-y-2">
-                  <div className="flex flex-wrap gap-2">
-                    <span className="px-2 py-0.5 rounded bg-primary/20 text-primary-light">
-                      Intent: {msg.analysis.intent}
-                    </span>
-                    <span className="px-2 py-0.5 rounded bg-accent/20 text-accent">
-                      Confidence: {(msg.analysis.confidence * 100).toFixed(1)}%
-                    </span>
-                  </div>
-
-                  {msg.analysis.top_intents && (
-                    <div className="space-y-1">
-                      <div className="text-gray-500">Top Predictions:</div>
-                      {msg.analysis.top_intents.map((ti, j) => (
-                        <div key={j} className="flex items-center gap-2">
-                          <div className="flex-1 bg-white/5 rounded-full h-1.5">
-                            <div
-                              className="bg-primary-light rounded-full h-1.5"
-                              style={{ width: `${ti.confidence * 100}%` }}
-                            />
-                          </div>
-                          <span className="text-gray-400 w-24 text-right">{ti.intent}</span>
-                          <span className="text-gray-500 w-12 text-right">{(ti.confidence * 100).toFixed(1)}%</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {msg.analysis.entities && msg.analysis.entities.length > 0 && (
-                    <div>
-                      <div className="text-gray-500 mb-1">Entities:</div>
-                      <div className="flex flex-wrap gap-1">
-                        {msg.analysis.entities.map((e, j) => (
-                          <span key={j} className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400">
-                            {e.value} ({e.type})
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="text-gray-500">
-                    Preprocessed: <span className="text-gray-400 font-mono">{msg.analysis.preprocessed}</span>
-                  </div>
+          msg.role === 'user' ? (
+            <div key={i} className="flex justify-end fade-in">
+              <div className="max-w-[75%]">
+                <p className="dateline text-right mb-1.5">you · {msg.time}</p>
+                <div className="bg-ink text-paper px-4 py-2.5 inline-block" style={{ borderRadius: '2px' }}>
+                  <p className="text-[14.5px] leading-relaxed text-paper">{msg.text}</p>
                 </div>
-              )}
+              </div>
             </div>
-          </div>
+          ) : (
+            <div key={i} className="fade-in">
+              <p className="dateline mb-1.5">LinguaBot · {msg.time}</p>
+              <p className="prose text-[17px] text-ink max-w-2xl">{msg.text}</p>
+              {showAnalysis && <MessageAnalysis analysis={msg.analysis} />}
+            </div>
+          )
         ))}
 
         {isTyping && (
-          <div className="flex justify-start animate-fade-in-up">
-            <div className="glass px-4 py-3 rounded-3xl rounded-bl-sm">
-              <div className="flex gap-1">
-                <div className="w-2 h-2 bg-gray-400 rounded-full typing-dot" />
-                <div className="w-2 h-2 bg-gray-400 rounded-full typing-dot" />
-                <div className="w-2 h-2 bg-gray-400 rounded-full typing-dot" />
-              </div>
-            </div>
+          <div className="fade-in">
+            <p className="dateline mb-1.5">LinguaBot · thinking</p>
+            <TypingDots />
           </div>
         )}
 
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Quick Replies */}
-      <div className="flex flex-wrap gap-2 mb-4">
-        {quickReplies.map(q => (
-          <button
-            key={q}
-            onClick={() => sendMessage(q)}
-            disabled={isTyping}
-            className="glass px-3 py-1.5 rounded-full text-xs text-gray-400 hover:text-white hover:border-primary/50 transition-all disabled:opacity-50"
-          >
-            {q}
-          </button>
-        ))}
-      </div>
+      {/* Quick replies + Input */}
+      <div className="py-5 border-t border-rule">
+        <div className="flex flex-wrap gap-2 mb-4">
+          {quickReplies.map(q => (
+            <button
+              key={q}
+              onClick={() => sendMessage(q)}
+              disabled={isTyping}
+              className="btn-ghost"
+            >
+              {q}
+            </button>
+          ))}
+        </div>
 
-      {/* Input */}
-      <div className="flex gap-2">
-        <input
-          ref={inputRef}
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Type a message..."
-          disabled={isTyping}
-          className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:border-primary outline-none transition-colors disabled:opacity-50"
-        />
-        <button
-          onClick={() => sendMessage()}
-          disabled={!input.trim() || isTyping}
-          className="btn-glow px-6 py-3 bg-gradient-to-r from-primary to-primary-dark text-white rounded-xl font-medium hover:shadow-lg hover:shadow-primary/25 transition-all disabled:opacity-50"
-        >
-          Send
-        </button>
+        <div className="flex items-end gap-3">
+          <input
+            ref={inputRef}
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Write a message…"
+            disabled={isTyping}
+            aria-label="Message"
+            className="field-serif flex-1"
+          />
+          <button
+            onClick={() => sendMessage()}
+            disabled={!input.trim() || isTyping}
+            className="btn-primary shrink-0"
+          >
+            Send
+          </button>
+        </div>
       </div>
     </div>
   )

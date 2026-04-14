@@ -5,10 +5,21 @@ const API_BASE = '/api'
 const sampleTexts = [
   'What is machine learning and how does it work?',
   'Tell me about React and Node.js',
-  'How to prepare for software engineering interviews?',
   'Explain the difference between a stack and a queue',
   'Hello! How are you doing today?',
 ]
+
+function confidenceTint(c) {
+  if (c >= 0.7) return 'text-ok'
+  if (c >= 0.4) return 'text-warn'
+  return 'text-danger'
+}
+
+function confidenceBar(c) {
+  if (c >= 0.7) return 'bg-ok'
+  if (c >= 0.4) return 'bg-warn'
+  return 'bg-danger'
+}
 
 export default function Analyze() {
   const [text, setText] = useState('')
@@ -33,111 +44,89 @@ export default function Analyze() {
       const data = await res.json()
       setResult(data)
     } catch {
-      setError('Failed to connect to backend. Make sure the server is running on port 5200.')
+      setError('Could not reach the backend. Make sure the server is running on port 5200.')
     }
-
     setLoading(false)
   }
 
-  const getConfidenceColor = (confidence) => {
-    if (confidence >= 0.7) return 'text-green-400'
-    if (confidence >= 0.4) return 'text-yellow-400'
-    return 'text-red-400'
-  }
-
-  const getConfidenceBarColor = (confidence) => {
-    if (confidence >= 0.7) return 'bg-green-500'
-    if (confidence >= 0.4) return 'bg-yellow-500'
-    return 'bg-red-500'
-  }
-
   return (
-    <div className="relative max-w-4xl mx-auto px-4 py-8">
-      <div className="glow-blob glow-blob-1" />
-      <div className="glow-blob glow-blob-2" />
-
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2">Text Analysis</h1>
-        <p className="text-gray-400">Enter any text to see how the NLP pipeline processes it</p>
-      </div>
+    <div className="max-w-5xl mx-auto px-6 lg:px-10">
+      {/* Masthead */}
+      <header className="pt-14 pb-8 border-b border-rule">
+        <p className="label mb-4">Under the glass</p>
+        <h1 className="display text-4xl md:text-5xl text-ink mb-3">Sentence analysis</h1>
+        <p className="prose text-[17px] text-ink-soft max-w-2xl">
+          Paste a sentence. See how the model preprocesses it, which intent it chooses,
+          what entities it notices, and how sure it is.
+        </p>
+      </header>
 
       {/* Input */}
-      <div className="glass rounded-3xl p-8 mb-8">
+      <section className="py-8 border-b border-rule">
+        <label className="label block mb-3" htmlFor="analyze-input">Your sentence</label>
         <textarea
+          id="analyze-input"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Enter text to analyze..."
+          placeholder="Write something the model can read…"
           rows={3}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:border-primary outline-none resize-none mb-4"
+          className="field-serif"
         />
 
-        <div className="flex flex-wrap items-center gap-4">
-          <button
-            onClick={() => analyze()}
-            disabled={!text.trim() || loading}
-            className="btn-glow px-6 py-2 bg-gradient-to-r from-primary to-primary-dark text-white rounded-xl font-medium hover:shadow-lg hover:shadow-primary/25 transition-all disabled:opacity-50"
-          >
-            {loading ? 'Analyzing...' : 'Analyze'}
+        <div className="mt-6 flex flex-wrap items-center gap-3">
+          <button onClick={() => analyze()} disabled={!text.trim() || loading} className="btn-primary">
+            {loading ? 'Analyzing…' : 'Analyze'}
           </button>
-
-          <div className="text-xs text-gray-500">Try a sample:</div>
+          <span className="dateline mx-2">or try</span>
           <div className="flex flex-wrap gap-2">
             {sampleTexts.map((s, i) => (
-              <button
-                key={i}
-                onClick={() => analyze(s)}
-                disabled={loading}
-                className="glass px-3 py-1.5 rounded-full text-xs text-gray-400 hover:text-white hover:border-primary/50 transition-all disabled:opacity-50"
-              >
-                {s.length > 40 ? s.slice(0, 40) + '...' : s}
+              <button key={i} onClick={() => analyze(s)} disabled={loading} className="btn-ghost">
+                {s.length > 38 ? s.slice(0, 38) + '…' : s}
               </button>
             ))}
           </div>
         </div>
-      </div>
 
-      {error && (
-        <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 mb-8 text-red-400 text-sm">
-          {error}
-        </div>
-      )}
+        {error && (
+          <p className="footnote mt-4 text-danger">{error}</p>
+        )}
+      </section>
 
-      {/* Results */}
+      {/* Report */}
       {result && (
-        <div className="space-y-8">
-          {/* Intent & Confidence */}
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="glass rounded-3xl p-8">
-              <h3 className="text-sm font-medium text-gray-400 mb-4">Predicted Intent</h3>
-              <div className="text-3xl font-bold text-white mb-2 capitalize">{result.intent}</div>
-              <div className={`text-lg font-mono ${getConfidenceColor(result.confidence)}`}>
+        <section className="py-10 space-y-10">
+          {/* Verdict */}
+          <div className="grid md:grid-cols-[1fr_1.4fr] gap-10 pb-8 border-b border-rule">
+            <div>
+              <p className="label mb-2">Predicted intent</p>
+              <p className="display text-4xl text-ink capitalize">{result.intent}</p>
+              <p className={`mono text-sm mt-2 ${confidenceTint(result.confidence)}`}>
                 {(result.confidence * 100).toFixed(1)}% confidence
-              </div>
+              </p>
             </div>
-
-            <div className="glass rounded-3xl p-8">
-              <h3 className="text-sm font-medium text-gray-400 mb-4">Response</h3>
-              <p className="text-gray-200 text-sm leading-relaxed">{result.response}</p>
+            <div>
+              <p className="label mb-2">Response</p>
+              <p className="prose text-[17px] text-ink">{result.response}</p>
             </div>
           </div>
 
-          {/* Top Intents */}
+          {/* Top intents */}
           {result.top_intents && (
-            <div className="glass rounded-3xl p-8">
-              <h3 className="text-sm font-medium text-gray-400 mb-4">Top Intent Predictions</h3>
-              <div className="space-y-4">
+            <div>
+              <p className="label mb-5">Top predictions</p>
+              <div className="space-y-3">
                 {result.top_intents.map((ti, i) => (
-                  <div key={i} className="flex items-center gap-4">
-                    <div className="w-28 text-sm text-gray-300 capitalize font-medium">{ti.intent}</div>
-                    <div className="flex-1 bg-white/5 rounded-full h-3">
+                  <div key={i} className="grid grid-cols-[140px_1fr_auto] items-center gap-4">
+                    <span className="serif text-ink text-[15px] capitalize">{ti.intent}</span>
+                    <div className="h-[3px] bg-rule rounded-full overflow-hidden">
                       <div
-                        className={`${getConfidenceBarColor(ti.confidence)} rounded-full h-3 transition-all`}
+                        className={`h-full ${confidenceBar(ti.confidence)}`}
                         style={{ width: `${Math.max(ti.confidence * 100, 2)}%` }}
                       />
                     </div>
-                    <div className={`w-16 text-right text-sm font-mono ${getConfidenceColor(ti.confidence)}`}>
+                    <span className={`mono text-xs w-14 text-right ${confidenceTint(ti.confidence)}`}>
                       {(ti.confidence * 100).toFixed(1)}%
-                    </div>
+                    </span>
                   </div>
                 ))}
               </div>
@@ -145,57 +134,60 @@ export default function Analyze() {
           )}
 
           {/* Entities */}
-          <div className="glass rounded-3xl p-8">
-            <h3 className="text-sm font-medium text-gray-400 mb-4">Extracted Entities</h3>
+          <div>
+            <p className="label mb-4">Entities</p>
             {result.entities && result.entities.length > 0 ? (
-              <div className="flex flex-wrap gap-2">
+              <ul className="flex flex-wrap gap-2">
                 {result.entities.map((entity, i) => (
-                  <div key={i} className="px-3 py-2 rounded-xl bg-white/5 border border-white/10">
-                    <span className="text-white font-medium text-sm">{entity.value}</span>
-                    <span className="text-gray-500 text-xs ml-2">{entity.type.replace('_', ' ')}</span>
-                  </div>
+                  <li key={i} className="px-3 py-1.5 border border-rule" style={{ borderRadius: '2px' }}>
+                    <span className="serif text-ink text-[14px]">{entity.value}</span>
+                    <span className="mono text-[10px] text-ink-faded ml-2">{entity.type.replace('_', ' ')}</span>
+                  </li>
                 ))}
-              </div>
+              </ul>
             ) : (
-              <p className="text-gray-500 text-sm">No entities detected</p>
+              <p className="footnote">No entities surfaced.</p>
             )}
           </div>
 
-          {/* Preprocessing */}
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="glass rounded-3xl p-8">
-              <h3 className="text-sm font-medium text-gray-400 mb-4">Preprocessing</h3>
-              <div className="space-y-4">
+          {/* Preprocessing + Metadata */}
+          <div className="grid md:grid-cols-2 gap-10 pt-8 border-t border-rule">
+            <div>
+              <p className="label mb-4">Preprocessing</p>
+              <div className="space-y-3">
                 <div>
-                  <div className="text-xs text-gray-500 mb-1">Original</div>
-                  <div className="px-3 py-2 bg-white/5 rounded-lg text-sm text-gray-300 font-mono">{text}</div>
+                  <p className="dateline mb-1">original</p>
+                  <p className="mono text-[13px] text-ink-soft leading-relaxed">{text}</p>
                 </div>
-                <div className="flex justify-center text-gray-500">↓</div>
-                <div>
-                  <div className="text-xs text-gray-500 mb-1">After Preprocessing</div>
-                  <div className="px-3 py-2 bg-white/5 rounded-lg text-sm text-primary-light font-mono">{result.preprocessed}</div>
+                <div className="border-l-2 border-accent pl-4 py-1">
+                  <p className="dateline mb-1" style={{ color: 'var(--accent)' }}>normalized</p>
+                  <p className="mono text-[13px] text-ink leading-relaxed">{result.preprocessed}</p>
                 </div>
               </div>
             </div>
 
-            <div className="glass rounded-3xl p-8">
-              <h3 className="text-sm font-medium text-gray-400 mb-4">Metadata</h3>
+            <div>
+              <p className="label mb-4">Measurements</p>
               {result.metadata && (
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 bg-white/5 rounded-xl text-center">
-                    <div className="text-2xl font-bold text-white">{result.metadata.word_count}</div>
-                    <div className="text-xs text-gray-500">Words</div>
+                <dl className="grid grid-cols-2 gap-6">
+                  <div>
+                    <dt className="dateline mb-1">words</dt>
+                    <dd className="display text-4xl text-ink">{result.metadata.word_count}</dd>
                   </div>
-                  <div className="p-4 bg-white/5 rounded-xl text-center">
-                    <div className="text-2xl font-bold text-white">{result.metadata.char_count}</div>
-                    <div className="text-xs text-gray-500">Characters</div>
+                  <div>
+                    <dt className="dateline mb-1">characters</dt>
+                    <dd className="display text-4xl text-ink">{result.metadata.char_count}</dd>
                   </div>
-                </div>
+                </dl>
               )}
             </div>
           </div>
-        </div>
+        </section>
       )}
+
+      <footer className="py-10 text-center">
+        <p className="dateline">— fin —</p>
+      </footer>
     </div>
   )
 }

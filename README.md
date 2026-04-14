@@ -6,14 +6,41 @@ An intelligent chatbot built with Natural Language Processing, featuring intent 
 
 ## Screenshots
 
-### Landing Page
-![Home](screenshots/home.png)
+Editorial, print-inspired UI with a light / dark toggle in the navbar.
 
-### Chat Interface
-![Chat](screenshots/chat.png)
+### Essay (landing)
 
-### Text Analysis
-![Analyze](screenshots/analyze.png)
+**Light**
+
+![Home — light](docs/01-home-light.png)
+
+**Dark**
+
+![Home — dark](docs/01-home-dark.png)
+
+### Conversation (chat)
+
+**Light**
+
+![Chat — light](docs/02-chat-light.png)
+
+**Dark**
+
+![Chat — dark](docs/02-chat-dark.png)
+
+Bot replies render as serif prose with a dateline; intent, confidence, and entities appear as an italic footnote under each reply — a visible view into the NLP pipeline.
+
+### Analysis (sentence inspection)
+
+**Light**
+
+![Analyze — light](docs/03-analyze-light.png)
+
+**Dark**
+
+![Analyze — dark](docs/03-analyze-dark.png)
+
+Structured report — predicted intent with confidence, top-3 predictions with bars, extracted entities, original vs. preprocessed text, and basic measurements.
 
 ## Features
 
